@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>MCQ | Python Programming </title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            font-family: 'Comic Sans MS', 'Arial', sans-serif;
+            background-color: #F7F9FC;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        #timer {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #6B7280;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+        }
+        form {
+            background-color: #FFFFFF;
+            border-radius: 1rem;
+            padding: 2rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            max-width: 600px;
+            width: 100%;
+        }
+        .question {
+            margin-bottom: 1.5rem;
+            padding: 1rem;
+            background-color: #F3F4F6;
+            border-radius: 0.5rem;
+            box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.05);
+        }
+        .question p {
+            font-size: 1.2rem;
+            color: #4B5563;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+        label {
+            display: block;
+            background-color: #FFFFFF;
+            border: 2px solid #E2E8F0;
+            padding: 0.5rem 1rem;
+            margin-top: 0.5rem;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            transition: transform 0.2s ease, background-color 0.2s ease, border-color 0.2s ease;
+        }
+        label:hover,
+        label:focus-within {
+            transform: scale(1.05);
+            background-color: #F3F4F6;
+            border-color: #CBD5E0;
+        }
+        input[type="radio"] {
+            display: none;
+        }
+        input[type="radio"]:checked + label {
+            background-color: #D1FAE5;
+            border-color: #10B981;
+        }
+        input[type="submit"] {
+            background-color: #6B46C1;
+            color: white;
+            font-size: 1.2rem;
+            padding: 0.75rem 2rem;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.2s;
+            margin-top: 1.5rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        input[type="submit"]:hover {
+            background-color: #7E3AF2;
+            transform: scale(1.05);
+        }
+    </style>
+    <script>
+        // Set the time we're counting down to
+        var countDownDate = new Date().getTime() + 30 * 60000; // 30 minutes from now
+
+        // Update the count down every 1 second
+        var x = setInterval(function() {
+            var now = new Date().getTime();
+            var distance = countDownDate - now;
+
+            // Time calculations for minutes and seconds
+            var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+            // Display the result in the element with id="timer"
+            document.getElementById("timer").innerHTML = minutes + "m " + seconds + "s ";
+
+            // If the count down is finished, submit the form
+            if (distance < 0) {
+                clearInterval(x);
+                document.getElementById("timer").innerHTML = "EXPIRED";
+                document.querySelector("form").submit();
+            }
+        }, 1000);
+    </script>
+</head>
+<body>
+    <div class="flex flex-col items-center">
+        <h1 class="text-4xl font-bold mb-4 text-gray-800">MCQ | Python Programming </h1>
+        <div id="timer" class="mb-6"></div>
+        <form action="{{ url_for('submit') }}" method="post" class="rounded-lg shadow-lg">
+            <!-- Include hidden inputs for Name and Batch if needed for submission -->
+            <input type="hidden" name="name" value="{{ name }}">
+            <input type="hidden" name="batch" value="{{ batch }}">
+
+            {% for q in questions %}
+            <div class="question">
+                {% set question_id = 'question' ~ loop.index %}
+                <p>{{ loop.index }}. {{ q.text }}</p>
+                {% for choice in q.choices %}
+                <!-- Correcting the ID and for attributes to ensure uniqueness and proper association -->
+                <input type="radio" id="{{ question_id }}_{{ loop.index0 }}" name="{{ question_id }}" value="{{ choice }}">
+                <label for="{{ question_id }}_{{ loop.index0 }}">{{ choice }}</label>
+                {% endfor %}
+            </div>
+            {% endfor %}
+
+            <input type="submit" value="Submit Quiz" class="w-full">
+        </form>
+    </div>
+</body>
+</html>

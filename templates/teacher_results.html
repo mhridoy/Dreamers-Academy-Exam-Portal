@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>MCQ Quiz Results Overview</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            padding: 20px;
+            font-family: Arial, sans-serif;
+        }
+        .correct-answer { color: green; }
+        .incorrect-answer { color: red; }
+        .btn-toggle {
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1 class="text-center mb-4">Quiz Results Overview</h1>
+    
+    <div class="table-responsive mb-5">
+        <table class="table table-bordered">
+            <thead class="thead-dark">
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Student Name</th>
+                    <th scope="col">Batch</th>
+                    <th scope="col">Score</th>
+                    <th scope="col">Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for student in results %}
+                <tr>
+                    <th scope="row">{{ loop.index }}</th>
+                    <td>{{ student.name }}</td>
+                    <td>{{ student.batch }}</td>
+                    <td>{{ student.total_score }}</td>
+                    <td>
+                        <!-- Make sure the data-target corresponds to the id of the collapsible element -->
+                        <button class="btn btn-info btn-toggle" type="button" data-toggle="collapse" data-target="#answerSheet{{ loop.index }}" aria-expanded="false">
+                            View Answer Sheet
+                        </button>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    {% for student in results %}
+    <!-- This div should have the 'collapse' class and not 'show' -->
+    <div class="collapse details-container" id="answerSheet{{ loop.index }}">
+        <div class="card card-body">
+                    <!-- ... existing details ... -->
+                    <table class="table table-bordered">
+                        <!-- ... existing table headers ... -->
+                        <tbody>
+                            {% for answer in student.answers %}
+                            <tr>
+                                <td>{{ answer.question }}</td>
+                                <td>{{ answer.selected_option }}</td>
+                                <td>{{ answer.correct_option }}</td>
+                                <td class="{{ 'correct-answer' if answer.is_correct else 'incorrect-answer' }}">
+                                    {{ 'Correct' if answer.is_correct else 'Incorrect' }}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            {% endfor %}
+
+       <!-- Bootstrap Bundle with Popper -->
+       <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+       <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.0.6/dist/umd/popper.min.js"></script>
+       <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+       <script>
+           // Script for Bootstrap 4 to handle the collapsible answer sheets
+           $('.btn-toggle').click(function() {
+               var target = $($(this).data("target"));
+               $('.details-container').not(target).collapse('hide'); // Hide all other details containers
+               target.collapse('toggle'); // Toggle the current one
+           });
+       </script>
+   </body>
+   </html>

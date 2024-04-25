@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Coding Test Results Overview</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.x/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100 p-5">
+    <h1 class="text-3xl text-center font-semibold my-4">Coding Test Results Overview</h1>
+
+    <div class="overflow-x-auto mb-5">
+        <table class="min-w-full divide-y divide-gray-200">
+            <thead class="bg-gray-800 text-white">
+                <tr>
+                    <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">#</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Student Name</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Batch</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Score</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Action</th>
+                </tr>
+            </thead>
+            <tbody class="bg-white divide-y divide-gray-200">
+                {% for student in student_results %}
+                <tr>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{{ loop.index }}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ student.user.name }}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ student.batch }}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ student.total_correct }}/{{ total_questions }}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                        <button class="btn-toggle px-4 py-2 bg-blue-500 text-white font-bold rounded hover:bg-blue-700 transition ease-in-out duration-150" type="button" data-target="details{{ student.user.id }}">
+                            View Details
+                        </button>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    {% for student in student_results %}
+    <div class="details-container bg-white my-2 p-4 rounded shadow" id="details{{ student.user.id }}" hidden>
+        <table class="min-w-full divide-y divide-gray-200">
+            <thead class="bg-gray-200">
+                <tr>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-1/3">Question</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Submitted Answer</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Correct Answer</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Result</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Student Code Output</th>
+                </tr>
+            </thead>
+            <tbody class="bg-white divide-y divide-gray-200">
+                {% for answer in student.results %}
+                <tr>
+                    <td class="px-6 py-4 whitespace-normal text-sm text-gray-900">{{ answer.question_text }}</td>
+                    <td class="px-6 py-4 whitespace-pre text-sm text-gray-500"><pre>{{ answer.answer }}</pre></td>
+                    <td class="px-6 py-4 whitespace-pre text-sm text-gray-500"><pre>{{ answer.correct_answer }}</pre></td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm {{ 'text-green-500' if answer.is_correct else 'text-red-500' }}">
+                        {{ 'Correct' if answer.is_correct else 'Incorrect' }}
+                    </td>
+                    <td class="px-6 py-4 whitespace-pre text-sm text-gray-500"><pre>{{ answer.student_output }}</pre></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% endfor %}
+
+    <script>
+        // Script to toggle the visibility of the student result details
+        document.addEventListener('DOMContentLoaded', () => {
+            document.querySelectorAll('.btn-toggle').forEach(button => {
+                button.addEventListener('click', () => {
+                    const targetId = button.getAttribute('data-target');
+                    const targetElement = document.getElementById(targetId);
+
+                    // Toggle the "hidden" attribute to show or hide the details
+                    if (targetElement.hasAttribute('hidden')) {
+                        targetElement.removeAttribute('hidden');
+                    } else {
+                        targetElement.setAttribute('hidden', '');
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>

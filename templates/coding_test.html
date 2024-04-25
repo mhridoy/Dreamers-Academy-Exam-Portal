@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Coding Test for Kids</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-image: url('https://images.unsplash.com/photo-1464802686167-b939a6910659?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1150&q=80');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+        }
+
+        .glass-effect {
+            background-color: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+
+<body class="text-gray-800">
+    <div class="container mx-auto py-8">
+        <h1 class="text-5xl font-bold mb-12 text-center text-white">🚀 Coding Adventure</h1> {% if questions %} <form
+            action="{{ url_for('submit_coding_test') }}" method="post" class="space-y-12"> {% for question in questions
+            %} <div class="glass-effect p-8">
+                <h2 class="text-3xl font-semibold mb-6 text-indigo-600">✨ Question {{ loop.index }}: {{ question.text }}
+                </h2>
+                <div class="relative"> <textarea name="answer{{ question.id }}" rows="10"
+                        class="w-full bg-white bg-opacity-50 text-gray-800 border-none focus:outline-none focus:ring-2 focus:ring-indigo-600 rounded-lg p-4 pr-10 font-mono">{{ question.starter_code }}</textarea>
+                    <div class="absolute top-0 right-0 mt-3 mr-3"> <svg class="w-6 h-6 text-gray-600" fill="none"
+                            stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"></path>
+                        </svg> </div>
+                </div>
+            </div> {% endfor %} <div class="text-center"> <button type="submit"
+                    class="bg-indigo-600 text-white px-8 py-4 rounded-full font-bold text-lg hover:bg-indigo-700 transition duration-200">Submit
+                    Answers 🚀</button> </div>
+        </form> {% else %} <p class="text-center text-white text-xl">No questions available at the moment.</p> {% endif
+        %}
+    </div>
+</body>
+
+</html>

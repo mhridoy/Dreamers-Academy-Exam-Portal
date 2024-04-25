@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Quiz Results</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f0f7ff;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        h1, h2 {
+            color: #333;
+        }
+        .score {
+            background-color: #dff0d8;
+            color: #3c763d;
+            padding: 10px;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+        .results {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            padding: 20px;
+            width: 100%;
+            max-width: 600px;
+        }
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        li {
+            background: #f2f2f2;
+            margin-bottom: 10px;
+            padding: 10px;
+            border-radius: 5px;
+        }
+        .correct {
+            background-color: #dff0d8;
+        }
+        a {
+            display: inline-block;
+            background-color: #5bc0de;
+            color: white;
+            padding: 10px 20px;
+            text-decoration: none;
+            border-radius: 5px;
+            margin-top: 20px;
+        }
+        a:hover {
+            background-color: #31b0d5;
+        }
+    </style>
+</head>
+<body>
+    <h1>Quiz Results</h1>
+    <div class="score">Your score: {{ score }}/{{ total }}</div>
+
+    {% if wrong_answers %}
+        <div class="results">
+            <h2>Review the Answers:</h2>
+            <ul>
+                {% for question_text, user_answer, correct_answer in wrong_answers %}
+                    <li>
+                        <p><strong>Question:</strong> {{ question_text }}</p>
+                        <p><strong>Your Answer:</strong> {{ user_answer | default('No answer', true) }}</p>
+                        <p class="correct"><strong>Correct Answer:</strong> {{ correct_answer }}</p>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+    {% else %}
+        <p>Congratulations! You got all answers correct!</p>
+    {% endif %}
+
+    <a href="{{ url_for('index') }}">Take the Quiz Again</a>
+</body>
+</html>
